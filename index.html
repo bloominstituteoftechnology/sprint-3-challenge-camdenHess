@@ -46,6 +46,62 @@
 
     // 👉 CHALLENGE 1 - Integers
     class Integers {
+      constructor (...args) {
+        this.ints = args;
+        this.result = [];
+      }
+      getAll = () => this.ints;
+
+      getEvens() {
+        for (let i in this.ints) {
+          let num = this.ints[i];
+          if (num % 2 === 0) {
+            this.result.push(num);
+          }
+        }
+        return this.result
+      }
+
+      getNegatives() {
+        for (let i in this.ints) {
+          let num = this.ints[i];
+          if (num < 0) {
+            this.result.push(num);
+          }
+        }
+        return this.result
+      }
+
+      getAllSquared() {
+        let numSquared = this.ints.map(int => int ** 2);
+        return numSquared;
+      }
+
+      pop = () => this.ints.pop();
+
+      push(int) {
+        this.ints.push(int)
+        return this.ints
+      }
+
+      getEveryNth(n) {
+        let final = [];
+        for (let i = 0; i <= this.ints.length -1; i++) {
+          if(i % n === 0) {
+            final.push(this.ints[i])
+          }
+        }
+        return final
+      }
+
+      getAllReversed() {
+        for (let i = this.ints.length -1; i >= 0; i--) {
+          let num = this.ints[i];
+          this.result.push(num);
+        }
+        return this.result;
+      }
+
       // 🧠 Constructor takes **any** number of arguments, which are integers
       // 🧠 Instances have an `ints` property which is an array holding the integers above in the same order
       // 🧠 Implement a `getAll` method which returns the data held in the `ints` property
@@ -63,6 +119,41 @@
 
     // 👉 CHALLENGE 2 NerfGun
     class NerfGun {
+      constructor (totalNum) {
+        this.totalNum = totalNum;
+        this.numLeft = totalNum;
+        this.safetyOn = true;
+      }
+      shoot() {
+        if (this.numLeft > 0 && this.safetyOn === false) {
+          this.numLeft--;
+          return 'Bang!'
+        } else {
+          return "Click!"
+        }
+      }
+
+      reload(reloadNum) {
+        if (typeof reloadNum !== 'number' || reloadNum < 1) {
+          return "Error reloading!"
+        }
+        if ((this.numLeft + reloadNum) > this.totalNum) {
+          this.numLeft = this.totalNum;
+          return `${this.numLeft} projectiles left!`
+        } else {
+          this.numLeft = this.numLeft + reloadNum
+          return `${this.numLeft} projectiles left!`
+        }
+      }
+
+      toggleSafety() {
+        this.safetyOn = !this.safetyOn
+        if (this.safetyOn) {
+          return "Safety enabled!"
+        } else {
+          return "Safety disabled!"
+        }
+      }
       // 🧠 Constructor takes one argument: the total number of projectiles supported by the instance
       // 🧠 New instances initialize fully loaded and with the safety on
       // 🧠 Instances have a `shoot` method that takes no arguments:
@@ -81,6 +172,33 @@
 
     // 👉 CHALLENGE 3 EBook
     class EBook {
+      constructor(textOfBook, charPerPage) {
+        this.textOfBook = textOfBook;
+        this.charPerPage = charPerPage;
+        this.charUsed = 0;
+      }
+
+      next() {
+        if (this.charUsed === this.textOfBook.length) {
+          return null
+        }
+        if (this.charUsed + this.charPerPage > this.textOfBook.length) {
+          let lastPage = this.textOfBook.slice(this.charUsed, this.textOfBook.length)
+          this.charUsed = this.textOfBook.length
+          return lastPage
+        }
+        if (this.charUsed > 0) {
+          let regularPage = this.textOfBook.slice(this.charUsed, (this.charUsed + this.charPerPage))
+          this.charUsed += this.charPerPage
+          return regularPage
+        }
+        if (this.charUsed === 0) {
+          this.charUsed += this.charPerPage;
+          let firstPage = this.textOfBook.slice(0, this.charUsed);
+          return firstPage
+        }
+
+      }
       // 🧠 Constructor takes two arguments:
       //      * First arg is a string with the whole text of the book
       //      * Second arg is the number of characters contained in a single page of the book
@@ -100,6 +218,73 @@
 
     // 👉 CHALLENGE 4 AntFarm
     class AntFarm {
+      constructor(...names) {
+        this.names = names
+        this.health = 100
+        this.ants = []
+        for (let i in names) {
+          this.ants.push({"name": names[i], "health": this.health})
+        }
+        // this.ants = names.map(name => {
+        //   return { name, health: 100 }
+        // })
+      }
+
+      work() {
+        let length = this.ants.length
+
+        if (length === 0) {
+          return 'No ants here. Did you work them to death?'
+        }
+        
+        for (let i in this.ants) {
+          let ant = this.ants[i]
+          ant.health -= 20
+        }
+
+        // this.ants = this.ants.map(a => {
+        //   a.health -= 20
+        //   return a
+        // })
+        
+        this.ants = this.ants.filter(ant => ant.health > 0)
+        
+        if (length > 0) {
+          return `${length} ants starting work!`
+        }
+        // return `${length} ants starting work!`
+        
+      }
+
+      feed(antName) {
+
+        this.ants.map(ant => {
+          if (ant.name === antName) {
+            ant.health += 15
+          }
+        })
+        for (let i in this.ants) {
+          let ant = this.ants[i]
+          if (ant.name === antName) {
+            return 'Yum!'
+          }
+        }
+            return `${antName} not found!`
+      }
+
+    //   feed(antName) {
+    //     let counter = 0
+    //     this.ants = this.ants.map(a => {
+    //       if (a.name === antName) {
+    //         counter++
+    //         a.health += 15
+    //       }
+    //       return a
+    //     })
+    //     return counter ? `Yum!` : `${antName} not found!`
+    //   }
+    // }
+
       // 🧠 Constructor takes **any** number of arguments, which are strings: the names of your ants
       // 🧠 Instances of AntFarm have an `ants` property holding an array of ants:
       //      * Each ant is an object with a `name` prop and a `health` prop that starts at 100
